@@ -11,9 +11,6 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.time.Instant;
 import java.util.Date;
-import java.util.Map;
-
-import static com.fasterxml.jackson.databind.type.LogicalType.Map;
 
 @Component
 public class JwtService {
@@ -27,12 +24,11 @@ public class JwtService {
         this.expirationMs = expirationMs;
     }
 
-    public String generateToken(String subject, Map<String, Object> claims) {
+    public String generateToken(String subject) {
 
         Instant currentTime = Instant.now();
 
         return Jwts.builder().setSubject(subject)
-                .addClaims(claims)
                 .setIssuedAt(Date.from(currentTime))
                 .setExpiration(Date.from(currentTime.plusMillis(expirationMs)))
                 .signWith(key, SignatureAlgorithm.HS256)
