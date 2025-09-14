@@ -37,7 +37,11 @@ public class AuthController {
         String roleName = Optional.ofNullable(req.getRole()).orElse("EMPLOYEE").toUpperCase();
         Role role = roleRepo.findByName(roleName).orElseGet(() -> roleRepo.save(Role.builder().name(roleName).build()));
 
-        User u = User.builder().username(req.getUsername()).password(passwordEncoder.encode(req.getPassword())).username(req.getFullName()).roles(Set.of(role)).build();
+        User u = User.builder().username(req.getUsername())
+                .password(passwordEncoder.encode(req.getPassword()))
+                .username(req.getFullName())
+                .roles(Set.of(role))
+                .build();
 
         userRepo.save(u);
 
