@@ -1,8 +1,20 @@
 package com.nff.roster.service;
 
+import com.nff.roster.Dto.RosterView;
+import com.nff.roster.entity.Roster;
+import com.nff.roster.entity.RosterAssignment;
+import com.nff.roster.entity.User;
+import com.nff.roster.repository.RosterAssignmentRepository;
+import com.nff.roster.repository.RosterRepository;
 import com.nff.roster.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -10,7 +22,7 @@ public class RosterService {
     private final RosterRepository rosterRepo;
     private final RosterAssignmentRepository assignmentRepo;
     private final UserRepository userRepo;
-    private final SmsService smsService;
+
 
     private static final List<String> DAYS = List.of("MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY");
     private static final int SLOTS_PER_DAY = 3;
@@ -42,8 +54,8 @@ public class RosterService {
                 assignmentRepo.save(a);
 
                 // notify employee
-                String msg = String.format("Roster for week %s: you're assigned as pallet doer on %s.", weekStart, day);
-                smsService.sendSms(u.getPhoneNumber(), msg);
+//                String msg = String.format("Roster for week %s: you're assigned as pallet doer on %s.", weekStart, day);
+//                smsService.sendSms(u.getPhoneNumber(), msg);
 
                 idx++;
             }
@@ -62,8 +74,7 @@ public class RosterService {
                                 av.setDay(a.getDay());
                                 av.setUserId(a.getUser().getId());
                                 av.setUsername(a.getUser().getUsername());
-                                av.setFullName(a.getUser().getFullName());
-                                av.setPhoneNumber(a.getUser().getPhoneNumber());
+
                                 return av;
                             }).sorted(Comparator.comparing(RosterView.AssignmentView::getDay))
                             .collect(Collectors.toList())
