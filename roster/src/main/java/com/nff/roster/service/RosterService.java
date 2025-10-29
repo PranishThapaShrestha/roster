@@ -44,7 +44,9 @@ public class RosterService {
 
         int idx = 0;
         for (String day : DAYS) {
+
             for (int s = 0; s < SLOTS_PER_DAY; s++) {
+
                 User u = employees.get(idx % employees.size());
                 RosterAssignment a = RosterAssignment.builder()
                         .roster(roster)
